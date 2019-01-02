@@ -1,0 +1,10 @@
+/venv
+/blackbox-setting.php
+/.idea
+/__pycache__
+/build
+/dist
+/ipaexg.ttf
+/phpMaker.spec
+/proxy.txt
+/debug.log

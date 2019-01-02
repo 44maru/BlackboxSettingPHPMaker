@@ -219,10 +219,10 @@ class JsonMakerScreen(Screen):
 
                     if card_type == "代金引換":
                         card_type = "visa"
-                        card_number = "0000000000000000"
-                        card_limit_month = "01"
-                        card_limit_year = "2020"
-                        cvv = "111"
+                        card_number = ""
+                        card_limit_month = "12"
+                        card_limit_year = "2018"
+                        cvv = ""
                     else:
                         card_number = items[INDEX_CARD_NUMBER]
                         card_limit_month = items[INDEX_CARD_LIMIT_MONTH]
