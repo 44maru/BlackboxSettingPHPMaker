@@ -1,6 +1,7 @@
 import logging.config
 import os
 import sys
+import datetime
 
 import jctconv
 
@@ -218,10 +219,11 @@ class JsonMakerScreen(Screen):
                     card_type = items[INDEX_PAY_TYPE].lower().replace(" ", "_").replace("mastercard", "master")
 
                     if card_type == "代金引換":
+                        today = datetime.date.today()
                         card_type = "visa"
                         card_number = ""
-                        card_limit_month = "12"
-                        card_limit_year = "2018"
+                        card_limit_month = "%02d" % today.month
+                        card_limit_year = today.year
                         cvv = ""
                     else:
                         card_number = items[INDEX_CARD_NUMBER]
