@@ -43,7 +43,8 @@ INDEX_CARD_NUMBER = 14
 INDEX_CARD_LIMIT_MONTH = 15
 INDEX_CARD_LIMIT_YEAR = 16
 INDEX_CARD_CVV = 17
-INDEX_ITEM_NO = 4
+INDEX_ITEM_NO_1 = 4
+INDEX_ITEM_NO_2 = 5
 INDEX_ITEM_SIZE = 2
 
 ID_MESSAGE = "message"
@@ -82,6 +83,7 @@ $settings = array();
 OUT_FILE_CONTENTS_TEMPLATE = """
 $setting = array();
 $setting["secret"]		= "033ea2525cd12345033ea2525cd12345";
+$setting["category"]	= "{}";
 $setting["codes1"]		= "{}";
 $setting["sizes1"]		= "{}";
 $setting["codes2"]		= "";
@@ -218,6 +220,9 @@ class JsonMakerScreen(Screen):
                     zip_code = items[INDEX_POST_CODE].replace("-", "")
                     card_type = items[INDEX_PAY_TYPE].lower().replace(" ", "_").replace("mastercard", "master")
 
+                    if card_type == "americanexpress":
+                        card_type = "american_express"
+
                     if card_type == "代金引換":
                         today = datetime.date.today()
                         card_type = "visa"
@@ -236,7 +241,8 @@ class JsonMakerScreen(Screen):
                         cvv = items[INDEX_CARD_CVV]
 
                 elif items[0] == "*I":
-                    item_no = items[INDEX_ITEM_NO]
+                    item_no_1 = items[INDEX_ITEM_NO_1]
+                    item_no_2 = items[INDEX_ITEM_NO_2]
                     size = self.format_size(items[INDEX_ITEM_SIZE])
 
                     if len(PROXY_LIST) <= proxy_index:
@@ -245,7 +251,7 @@ class JsonMakerScreen(Screen):
                     proxy = self.get_proxy_info(proxy_index)
 
                     f.write(OUT_FILE_CONTENTS_TEMPLATE.format(
-                        item_no, size, proxy, CONFIG_DICT[CONFIG_KEY_START_WEEK],
+                        item_no_2, item_no_1, size, proxy, CONFIG_DICT[CONFIG_KEY_START_WEEK],
                         CONFIG_DICT[CONFIG_KEY_START_HHMM], last_name, first_name, email,
                         phone_number, state, city, detail_address, zip_code, card_type, card_number,
                         card_limit_month, card_limit_year, cvv, CONFIG_DICT[CONFIG_KEY_DELAY],

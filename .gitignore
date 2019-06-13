@@ -8,3 +8,5 @@
 /phpMaker.spec
 /proxy.txt
 /debug.log
+.vscode/tasks.json
+.vscode/settings.json
