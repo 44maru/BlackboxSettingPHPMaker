@@ -10,3 +10,5 @@
 /debug.log
 .vscode/tasks.json
 .vscode/settings.json
+debug.log*
+.vscode/launch.json

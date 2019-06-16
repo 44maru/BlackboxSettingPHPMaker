@@ -243,6 +243,9 @@ class JsonMakerScreen(Screen):
                 elif items[0] == "*I":
                     item_no_1 = items[INDEX_ITEM_NO_1]
                     item_no_2 = items[INDEX_ITEM_NO_2]
+                    if item_no_2.lower() == "all":
+                        item_no_2 = EMPTY
+
                     size = self.format_size(items[INDEX_ITEM_SIZE])
 
                     if len(PROXY_LIST) <= proxy_index:
