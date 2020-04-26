@@ -1,3 +1,4 @@
+/testdata
 /venv
 .venv
 /blackbox-setting.php
@@ -5,7 +6,6 @@
 /__pycache__
 /build
 /dist
-/ipaexg.ttf
 /phpMaker.spec
 /proxy.txt
 /debug.log
