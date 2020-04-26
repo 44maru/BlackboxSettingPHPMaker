@@ -3,3 +3,4 @@ START_WEEK=6
 START_HHMM=10:59
 webhookURL=http://aaaa.bbb.ccc
 discordmessage=サンプルメッセージ
+2captchaAPI=ddfe39cc39b0da099312d67776d0d6f

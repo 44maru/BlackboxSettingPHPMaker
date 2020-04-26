@@ -62,6 +62,7 @@ CONFIG_KEY_START_WEEK ="START_WEEK"
 CONFIG_KEY_START_HHMM ="START_HHMM"
 CONFIG_KEY_DISCORD_HOOK_URL = "webhookURL"
 CONFIG_KEY_DISCORD_MESSAGE = "discordmessage"
+CONFIG_KEY_2CAPTCHA_API = "2captchaAPI"
 PROXY_LIST = []
 
 OUT_FILE_CONTENTS_HEADER = """<?php
@@ -110,6 +111,9 @@ $setting["cash"]		= true;
 $setting["delay"]		= {};
 $setting["discordhookurl"] = "{}";
 $setting["discordmessage"] = "{}";
+$setting["recaptchabypass"]	= false;
+$setting["twocaptchabypass"]	= {};
+$setting["apikey"]	= "{}";
 $settings[{}] = $setting;
 """
 
@@ -253,12 +257,20 @@ class JsonMakerScreen(Screen):
 
                     proxy = self.get_proxy_info(proxy_index)
 
+                    apiKey = CONFIG_DICT[CONFIG_KEY_2CAPTCHA_API]
+                    if apiKey == EMPTY:
+                        twocaptchabypass = "false"
+                    else:
+                        twocaptchabypass = "true"
+
+
                     f.write(OUT_FILE_CONTENTS_TEMPLATE.format(
                         item_no_2, item_no_1, size, proxy, CONFIG_DICT[CONFIG_KEY_START_WEEK],
                         CONFIG_DICT[CONFIG_KEY_START_HHMM], last_name, first_name, email,
                         phone_number, state, city, detail_address, zip_code, card_type, card_number,
                         card_limit_month, card_limit_year, cvv, CONFIG_DICT[CONFIG_KEY_DELAY],
                         CONFIG_DICT[CONFIG_KEY_DISCORD_HOOK_URL], CONFIG_DICT[CONFIG_KEY_DISCORD_MESSAGE],
+                        twocaptchabypass, apiKey,
                         index
                     ))
                     index += 1
