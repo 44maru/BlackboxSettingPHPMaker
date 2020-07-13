@@ -63,6 +63,9 @@ CONFIG_KEY_START_HHMM ="START_HHMM"
 CONFIG_KEY_DISCORD_HOOK_URL = "webhookURL"
 CONFIG_KEY_DISCORD_MESSAGE = "discordmessage"
 CONFIG_KEY_2CAPTCHA_API = "2captchaAPI"
+CONFIG_KEY_RESTOCK = "RESTOCK"
+CONFIG_KEY_RESTOCK_START_WEEK = "RESTOCK_START_WEEK"
+CONFIG_KEY_RESTOCK_START_HHMM = "RESTOCK_START_HHMM"
 PROXY_LIST = []
 
 OUT_FILE_CONTENTS_HEADER = """<?php
@@ -114,6 +117,9 @@ $setting["discordmessage"] = "{}";
 $setting["recaptchabypass"]	= false;
 $setting["twocaptchabypass"]	= {};
 $setting["apikey"]	= "{}";
+$setting["restock_use"] = {};
+$setting["restock_start_week"]	= {};
+$setting["restock_start_hhmm"]	= "{}";
 $settings[{}] = $setting;
 """
 
@@ -271,6 +277,9 @@ class JsonMakerScreen(Screen):
                         card_limit_month, card_limit_year, cvv, CONFIG_DICT[CONFIG_KEY_DELAY],
                         CONFIG_DICT[CONFIG_KEY_DISCORD_HOOK_URL], CONFIG_DICT[CONFIG_KEY_DISCORD_MESSAGE],
                         twocaptchabypass, apiKey,
+                        CONFIG_DICT[CONFIG_KEY_RESTOCK], 
+                        CONFIG_DICT[CONFIG_KEY_RESTOCK_START_WEEK],
+                        CONFIG_DICT[CONFIG_KEY_RESTOCK_START_HHMM],
                         index
                     ))
                     index += 1
