@@ -50,12 +50,10 @@ INDEX_ITEM_SIZE = 2
 ID_MESSAGE = "message"
 
 OUT_FILE_NAME = "blackbox-setting.php"
-CHECKOUT_PROFILES_JSON = "checkoutprofiles.json"
 UTF8 = "utf8"
 SJIS = "sjis"
 
 CONFIG_TXT = "./config.txt"
-PROXY_TXT = "./proxy.txt"
 CONFIG_DICT = {}
 CONFIG_KEY_DELAY ="DELAY"
 CONFIG_KEY_START_WEEK ="START_WEEK"
@@ -63,10 +61,13 @@ CONFIG_KEY_START_HHMM ="START_HHMM"
 CONFIG_KEY_DISCORD_HOOK_URL = "webhookURL"
 CONFIG_KEY_DISCORD_MESSAGE = "discordmessage"
 CONFIG_KEY_2CAPTCHA_API = "2captchaAPI"
-CONFIG_KEY_RESTOCK = "RESTOCK"
-CONFIG_KEY_RESTOCK_START_WEEK = "RESTOCK_START_WEEK"
-CONFIG_KEY_RESTOCK_START_HHMM = "RESTOCK_START_HHMM"
+CONFIG_KEY_GOOGLE_LOGIN = "Gmail"
+
+PROXY_TXT = "./proxy.txt"
 PROXY_LIST = []
+
+GOOGLE_ACCOUNT_XLSX = "./Gmail.xlsx"
+GOOGLE_ACCOUNT_LIST = []
 
 OUT_FILE_CONTENTS_HEADER = """<?php
 // 
@@ -117,9 +118,10 @@ $setting["discordmessage"] = "{}";
 $setting["recaptchabypass"]	= false;
 $setting["twocaptchabypass"]	= {};
 $setting["apikey"]	= "{}";
-$setting["restock_use"] = {};
-$setting["restock_start_week"]	= {};
-$setting["restock_start_hhmm"]	= "{}";
+$setting["googleaccount"]    = "{}";
+$setting["googlepassword"]    = "{}";
+$setting["googlemailaddress"]    = "{}";
+$setting["googleLogin"]    = "{}";
 $settings[{}] = $setting;
 """
 
@@ -191,6 +193,12 @@ function CryptoJSAesEncrypt($passphrase, $plain_text){
 
 ?>"""
 
+
+class GoogleAccount():
+    def __init__(self, gmail, passwd, accountResetMail):
+        self.gmail = gmail
+        self.passwd = passwd
+        self.accountResetMail = accountResetMail
 
 class JsonMakerScreen(Screen):
     def __init__(self, **kwargs):
@@ -269,6 +277,13 @@ class JsonMakerScreen(Screen):
                     else:
                         twocaptchabypass = "true"
 
+                    needGoogleLogin = CONFIG_DICT[CONFIG_KEY_GOOGLE_LOGIN].lower()
+                    if needGoogleLogin == "true":
+                        needGoogleLogin = "true"
+                    else:
+                        needGoogleLogin = "false"
+
+                    googleAccountInfo = GOOGLE_ACCOUNT_LIST[(index-1) % len(GOOGLE_ACCOUNT_LIST)]
 
                     f.write(OUT_FILE_CONTENTS_TEMPLATE.format(
                         item_no_2, item_no_1, size, proxy, CONFIG_DICT[CONFIG_KEY_START_WEEK],
@@ -277,9 +292,10 @@ class JsonMakerScreen(Screen):
                         card_limit_month, card_limit_year, cvv, CONFIG_DICT[CONFIG_KEY_DELAY],
                         CONFIG_DICT[CONFIG_KEY_DISCORD_HOOK_URL], CONFIG_DICT[CONFIG_KEY_DISCORD_MESSAGE],
                         twocaptchabypass, apiKey,
-                        CONFIG_DICT[CONFIG_KEY_RESTOCK], 
-                        CONFIG_DICT[CONFIG_KEY_RESTOCK_START_WEEK],
-                        CONFIG_DICT[CONFIG_KEY_RESTOCK_START_HHMM],
+                        googleAccountInfo.gmail,
+                        googleAccountInfo.passwd,
+                        googleAccountInfo.accountResetMail,
+                        needGoogleLogin,
                         index
                     ))
                     index += 1
@@ -328,8 +344,17 @@ class PhpMakerApp(App):
 def setup_config():
     load_config()
     load_proxy()
+    loadGoogleAccount()
 
 
+def loadGoogleAccount():
+    from xlrd import open_workbook
+    workbook = open_workbook(GOOGLE_ACCOUNT_XLSX)
+    sheet = workbook.sheet_by_index(0)
+    for i in range(sheet.nrows):
+        row = sheet.row(i)
+        GOOGLE_ACCOUNT_LIST.append(
+            GoogleAccount(row[0].value, row[1].value, row[2].value))
 
 def load_proxy():
     if not os.path.exists(PROXY_TXT):
